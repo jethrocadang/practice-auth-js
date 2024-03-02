@@ -19,10 +19,15 @@ import { z } from "zod";
 import { userRegistrationSchema } from "@/lib/schema/schema";
 
 import { registerUser } from "@/lib/actions/auth";
+import { useToast } from "../components/use-toast";
+
+
 
 type FormData = z.infer<typeof userRegistrationSchema>
 
 export default function RegisterForm() {
+
+  const {toast} = useToast()
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(userRegistrationSchema),
@@ -42,7 +47,16 @@ export default function RegisterForm() {
         console.log("error")
       }
       if(result.success){
-        console.log("Apple")
+        alert(result.success)
+        toast({
+          description:"Registration succesfull"
+        })
+      }
+      if(result.duplicate){
+        console.log("dupli")
+        toast({
+          description:"duplicate"
+        })
       }
     })
     
@@ -71,7 +85,7 @@ export default function RegisterForm() {
             <FormItem>
               <FormLabel>Last Name</FormLabel>
               <FormControl>
-                <Input placeholder="John" {...field} />
+                <Input placeholder="Doe" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
