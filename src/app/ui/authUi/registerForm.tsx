@@ -16,50 +16,34 @@ import { PasswordInput } from "../components/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { userRegistrationSchema } from "@/lib/schema/schema";
+import { RegisterSchema, PasswordSchema } from "@/schemas/schema";
 
-import { registerUser } from "@/lib/actions/auth";
+import { registerUser } from "@/actions/auth";
 import { useToast } from "../components/use-toast";
-
-
-
-type FormData = z.infer<typeof userRegistrationSchema>
+import { useState } from "react";
 
 export default function RegisterForm() {
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
 
-  const {toast} = useToast()
-  // 1. Define your form.
   const form = useForm({
-    resolver: zodResolver(userRegistrationSchema),
+    resolver: zodResolver(PasswordSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
     },
   });
 
-  async function onSubmit(formdata : FormData) {
-    
-    registerUser(formdata).then(result => {
-      if(result.error){
-        console.log("error")
-      }
-      if(result.success){
-        alert(result.success)
-        toast({
-          description:"Registration succesfull"
-        })
-      }
-      if(result.duplicate){
-        console.log("dupli")
-        toast({
-          description:"duplicate"
-        })
-      }
-    })
-    
+  async function onSubmit(values: z.infer<typeof PasswordSchema>) {
+
+    setError("")
+    setSuccess("")
+
+    registerUser(values).then((data) => {
+    });
   }
 
   return (
@@ -72,7 +56,7 @@ export default function RegisterForm() {
             <FormItem>
               <FormLabel>First Name</FormLabel>
               <FormControl>
-                <Input placeholder="John" {...field}/>
+                <Input placeholder="John" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -124,12 +108,14 @@ export default function RegisterForm() {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-              <PasswordInput placeholder="Confirm Password" {...field} />
+                <PasswordInput placeholder="Confirm Password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <p>{error}</p>
+        <p>{success}</p>
         <Button type="submit">Submit</Button>
       </form>
     </Form>

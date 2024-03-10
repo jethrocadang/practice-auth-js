@@ -1,15 +1,22 @@
-import RegisterForm from "@/app/ui/authUi/registerForm";
-import Form from "@/app/ui/authUi/registerNative";
-import NextUiForm from "@/app/ui/authUi/registerNextUi";
+import {  sendMail } from "@/lib/mail";
 
-export default function Register() {
+export default function Home() {
+  const send = async () => {
+    "use server";
+
+    console.log("working ..")
+    await sendMail({
+      to: "jethrocadang@gmail.com",
+      name: "Vahid",
+      subject: "Test Mail",
+      body: "<h1>TEst</h1>"
+    });
+  };
   return (
-    <main className="flex items-center justify-center md:h-screen">
-      <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
-        <div className="rounded-lg bg-gray-50 px-6 pb-4 pt-8">
-          <NextUiForm/>
-        </div>
-      </div>
+    <main className="flex min-h-screen flex-col items-center justify-center p-24 gap-4">
+      <form>
+        <button formAction={send}>test</button>
+      </form>
     </main>
   );
 }
