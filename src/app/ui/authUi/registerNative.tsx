@@ -16,7 +16,6 @@ export default function Form() {
           />
         </div>
       </div> */}
-      <button formAction={send}>submit</button>
     </form>
   );
 }
